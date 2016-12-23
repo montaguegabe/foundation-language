@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		95D7022E1E0CCB880025406E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D7022D1E0CCB880025406E /* main.cpp */; };
+		95D702361E0CD3DE0025406E /* alternatemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95D702351E0CD3DE0025406E /* alternatemain.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +26,9 @@
 /* Begin PBXFileReference section */
 		95D7022A1E0CCB880025406E /* Foundation */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Foundation; sourceTree = BUILT_PRODUCTS_DIR; };
 		95D7022D1E0CCB880025406E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		95D702341E0CCCE70025406E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
+		95D702351E0CD3DE0025406E /* alternatemain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = alternatemain.cpp; sourceTree = "<group>"; };
+		95D702371E0CD8790025406E /* grammar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grammar.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,9 @@
 		95D7022C1E0CCB880025406E /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				95D702341E0CCCE70025406E /* ast.h */,
+				95D702371E0CD8790025406E /* grammar.h */,
+				95D702351E0CD3DE0025406E /* alternatemain.cpp */,
 				95D7022D1E0CCB880025406E /* main.cpp */,
 			);
 			path = Foundation;
@@ -121,6 +128,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95D7022E1E0CCB880025406E /* main.cpp in Sources */,
+				95D702361E0CD3DE0025406E /* alternatemain.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,7 +226,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = E6GA9X89TN;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Debug;
 		};
@@ -226,7 +237,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = E6GA9X89TN;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/include/;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/lib/;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 			};
 			name = Release;
 		};
