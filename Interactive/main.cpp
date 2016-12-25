@@ -6,27 +6,45 @@
 //  Copyright © 2016 Gabe Montague. All rights reserved.
 //
 
+#define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
+
 #include <iostream>
 #include "version.h"
-#include "ast.h"
+//#include "ast.h"
 #include "parse.h"
 
 static void printGreeting();
 
 int main(int argc, const char * argv[]) {
     
+    using boost::logic::tribool;
+    
     printGreeting();
+    
+    // The aggregated results from previous lines
+    std::string aggregate = "";
     
     while (true) {
         std::cout << ">>> ";
         std::string input;
         std::getline(std::cin, input);
         
-        if (input == "q" || input == "Q" || input == "quit()") {
+        if (input.empty() || input == "q" || input == "Q" || input == "quit()") {
             break;
         }
         
-        foundation::ast::fromString(input);
+        aggregate += input;
+        tribool result = foundation::ast::fromString(aggregate);
+        
+        if (!result) {
+            std::cout << "Syntax error." << std::endl;
+            aggregate = "";
+        } else if (result) {
+            std::cout << "Done, with 0 errors." << std::endl;
+            aggregate = "";
+        } else {
+            // Is indeterminate
+        }
     }
 
     return 0;
@@ -38,6 +56,6 @@ static void printGreeting() {
     std::cout << "Foundation Language " << FOUNDATION_VERSION_MAJOR << "."
     << FOUNDATION_VERSION_MINOR << "."
     << FOUNDATION_VERSION_BUGFIX << " ";
-    std::cout << "Interactive Console\n";
-    std::cout << "Enter q/Q to exit.\n";
+    std::cout << "Interactive Console" << std::endl;
+    std::cout << "Enter q/Q to exit." << std::endl;
 }

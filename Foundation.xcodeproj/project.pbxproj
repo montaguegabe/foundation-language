@@ -30,6 +30,7 @@
 		958E31CB1E0E357D004A0C2F /* Interpreter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Interpreter; sourceTree = BUILT_PRODUCTS_DIR; };
 		958E31CD1E0E357E004A0C2F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		958E31D21E0E3680004A0C2F /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		95CC8EAC1E0F9A6100198796 /* example.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = example.hpp; sourceTree = "<group>"; };
 		95D702341E0CCCE70025406E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
 		95D702371E0CD8790025406E /* grammar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grammar.h; sourceTree = "<group>"; };
 		95D702381E0CE08C0025406E /* boost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boost.h; sourceTree = "<group>"; };
@@ -59,6 +60,7 @@
 			isa = PBXGroup;
 			children = (
 				958E31CD1E0E357E004A0C2F /* main.cpp */,
+				95CC8EAC1E0F9A6100198796 /* example.hpp */,
 			);
 			name = Interpreter;
 			path = Interactive;

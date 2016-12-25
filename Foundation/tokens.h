@@ -11,12 +11,19 @@
 
 #include "boost.h"
 
+
 namespace foundation {
     
     namespace lex = boost::spirit::lex;
+    namespace qi = boost::spirit::qi;
 
-    enum tokenids {
-        IDANY = lex::min_token_id + 10
+    // Define token identifiers
+    enum token_ids {
+        ID_CONSTANT = 1000,
+        ID_IF,
+        ID_ELSE,
+        ID_WHILE,
+        ID_IDENTIFIER
     };
     
     template <typename Lexer>
@@ -24,29 +31,28 @@ namespace foundation {
         
         LanguageTokens() {
             
-            // Token types
+            // Define regular expressions
             identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
             constant = "[0-9]+";
-            if_ = "if";
-            else_ = "else";
-            while_ = "while";
             
             // Associate the tokens and the token set with the lexer
-            this->self = lex::token_def<>('(') | ')' | '{' | '}' | '=' | ';' | constant;
-            this->self += if_ | else_ | while_ | identifier;
+            this->self = lex::token_def<>('(') | ')' | '{' | '}' | '=' | ';';
             
-            // Define the whitespace to ignore (spaces, tabs, newlines and C-style comments)
+            // Define tokens
+            this->self.add
+            (constant, ID_CONSTANT)
+            ("if", ID_IF)
+            ("else", ID_ELSE)
+            ("while", ID_WHILE)
+            (identifier, ID_IDENTIFIER);
+            
             this->self("WS")
             =   lex::token_def<>("[ \\t\\n]+")
-            |   "\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/"
-            ;
+            |   "\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/";
         }
         
-        // These tokens expose the iterator_range of the matched input sequence
-        lex::token_def<> if_, else_, while_;
-        
         lex::token_def<std::string> identifier;
-        lex::token_def<unsigned> constant;
+        lex::token_def<unsigned int> constant;
     };
 }
 
