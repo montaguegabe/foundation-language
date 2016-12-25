@@ -10,7 +10,6 @@
 
 #include <iostream>
 #include "version.h"
-//#include "ast.h"
 #include "Parser.hpp"
 #include "boost.h"
 
@@ -19,17 +18,20 @@ static void printGreeting();
 int main(int argc, const char * argv[]) {
     
     using namespace foundation;
-    using boost::logic::tribool;
     
+    // Create a parser
     Parser parser;
     
+    // Greet the user
     printGreeting();
     
     // The aggregated results from previous lines
     std::string aggregate = "";
+    int curlyBalance = 0;
     
     while (true) {
         std::cout << ">>> ";
+        
         std::string input;
         std::getline(std::cin, input);
         
@@ -37,18 +39,28 @@ int main(int argc, const char * argv[]) {
             break;
         }
         
+        // Add to aggregate
         aggregate += input;
-        tribool result = parser.fromString(aggregate);
-        //boost::logic::tribool result = true;
         
-        if (!result) {
-            std::cout << "Syntax error." << std::endl;
+        // Determine if our input is balanced
+        for (char & c : input) {
+            if (c == '{') ++curlyBalance;
+            if (c == '}') --curlyBalance;
+        }
+        if (curlyBalance <= 0) {
+            
+            // Parse the accumulated string
+            bool result = parser.parse(aggregate);
+            
+            if (!result) {
+                std::cout << "Syntax error." << std::endl;
+            } else {
+                std::cout << "Done, with 0 errors." << std::endl;
+            }
+            
+            // Reset accumulation
             aggregate = "";
-        } else if (result) {
-            std::cout << "Done, with 0 errors." << std::endl;
-            aggregate = "";
-        } else {
-            // Is indeterminate
+            curlyBalance = 0;
         }
     }
 

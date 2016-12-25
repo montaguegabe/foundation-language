@@ -10,6 +10,7 @@
 #define Parser_hpp
 
 #include <string>
+#include <iostream>
 #include "boost.h"
 #include "tokens.h"
 #include "grammar.h"
@@ -41,7 +42,8 @@ namespace foundation {
         Parser() : _tokenizer(), _parser(_tokenizer) {
         }
         
-        boost::logic::tribool fromString(std::string & str);
+        // Parses a string. Returns if a string is successfully parsed
+        bool parse(std::string & str);
         
     private:
         

@@ -29,13 +29,12 @@ namespace foundation {
             using boost::phoenix::ref;
             
             program
-            = eps[ref(curly) = 0]
-            >> +block;
+            = +block;
             
             block
-            = qi::lit('{') [++ref(curly)]
+            = qi::lit('{')
             >> *statement
-            >> qi::lit('}') [--ref(curly)];
+            >> qi::lit('}');
             
             statement
             = assignment
@@ -84,9 +83,6 @@ namespace foundation {
         
         // The expression is the only rule having a return value
         qi::rule<Iterator, expression_type(), qi::in_state_skipper<Lexer> >  expression;
-        
-        // Keep track of parentheses
-        int curly;
     };
 }
 

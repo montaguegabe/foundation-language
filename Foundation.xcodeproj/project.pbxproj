@@ -91,11 +91,11 @@
 			children = (
 				95D702381E0CE08C0025406E /* boost.h */,
 				95D702341E0CCCE70025406E /* ast.h */,
+				95D702371E0CD8790025406E /* grammar.h */,
+				952DD11D1E0F413500580F88 /* tokens.h */,
 				95C7F1C81E10798F00174E2E /* Parser.hpp */,
 				95C7F1C71E10798F00174E2E /* Parser.cpp */,
-				95D702371E0CD8790025406E /* grammar.h */,
 				958E31D21E0E3680004A0C2F /* version.h */,
-				952DD11D1E0F413500580F88 /* tokens.h */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";

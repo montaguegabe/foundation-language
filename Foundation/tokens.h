@@ -16,7 +16,9 @@ namespace foundation {
     
     namespace lex = boost::spirit::lex;
     namespace qi = boost::spirit::qi;
-
+    using boost::phoenix::val;
+    using boost::phoenix::ref;
+    
     // Define token identifiers
     enum token_ids {
         ID_CONSTANT = 1000,
@@ -36,7 +38,12 @@ namespace foundation {
             constant = "[0-9]+";
             
             // Associate the tokens and the token set with the lexer
-            this->self = lex::token_def<>('(') | ')' | '{' | '}' | '=' | ';';
+            this->self = lex::token_def<>('(')
+            | ')'
+            | lex::char_('{')
+            | lex::char_('}')
+            | '='
+            | ';';
             
             // Define tokens
             this->self.add
