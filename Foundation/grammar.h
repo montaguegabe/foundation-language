@@ -9,63 +9,33 @@
 #ifndef grammar_h
 #define grammar_h
 
-#include <boost/config/warning_disable.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/variant/recursive_variant.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-#include <boost/foreach.hpp>
-
-#include <iostream>
-#include <string>
+#include "boost.h"
+//#include "ast.h"
 
 namespace foundation {
-    namespace qi = boost::spirit::qi;
-    namespace ascii = boost::spirit::ascii;
     
-    // Define parsing grammar for expressions
+    using namespace boost::spirit;
+    using namespace boost::spirit::ascii;
+    
     template <typename Iterator>
-    struct LanguageGrammar : qi::grammar<
-        Iterator, // Iterator type
-        ast::Program(), // Start grammar
-        ascii::space_type // Skip grammar
-    > {
-        
-        // Constructor
-        LanguageGrammar() : LanguageGrammar::base_type(expression)
+    struct LanguageGrammar : qi::grammar<Iterator>
+    {
+        template <typename TokenDef>
+        LanguageGrammar(TokenDef const& tok)
+        : LanguageGrammar::base_type(start)
+        , c(0), w(0), l(0)
         {
-            qi::uint_type UInt;
-            qi::char_type Char;
+            using boost::phoenix::ref;
+            using boost::phoenix::size;
             
-            // Define rule for expression
-            expression =
-            term
-            >> *(   (Char('+') >> term)
-                 |   (Char('-') >> term)
-                 )
-            ;
-            
-            // Define rule for terms
-            term =
-            factor
-            >> *(   (Char('*') >> factor)
-                 |   (Char('/') >> factor)
-                 )
-            ;
-            
-            // Define rule for 'factors'
-            factor =
-            UInt
-            |   '(' >> expression >> ')'
-            |   (Char('-') >> factor)
-            |   (Char('+') >> factor)
+            start = *(tok.while_[++ref(w), ++ref(c)]
+                     | tok.else_[++ref(c), ++ref(l)]
+                     | tok.if_[++ref(c)])
             ;
         }
         
-        // Register rules as member variables
-        qi::rule<Iterator, ast::Program(), ascii::space_type> expression;
-        qi::rule<Iterator, ast::Program(), ascii::space_type> term;
-        qi::rule<Iterator, ast::Operand(), ascii::space_type> factor;
+        std::size_t c, w, l;
+        qi::rule<Iterator> start;
     };
 }
 

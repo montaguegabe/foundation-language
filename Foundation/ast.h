@@ -9,15 +9,7 @@
 #ifndef ast_h
 #define ast_h
 
-#include <boost/config/warning_disable.hpp>
-#include <boost/spirit/include/qi.hpp>
-#include <boost/variant/recursive_variant.hpp>
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/fusion/include/adapt_struct.hpp>
-#include <boost/foreach.hpp>
-
-#include <iostream>
-#include <string>
+#include "boost.h"
 
 #pragma mark - Type declarations
 
@@ -70,7 +62,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 )
 
 
-#pragma mark - Evaluation function
+#pragma mark - Evaluation
 
 namespace foundation { namespace ast {
 
