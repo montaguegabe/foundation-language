@@ -9,7 +9,7 @@
 #ifndef boost_h
 #define boost_h
 
-#define BOOST_VARIANT_MINIMIZE_SIZE
+#define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
 
 #include <boost/config/warning_disable.hpp>
 #include <boost/spirit/include/qi.hpp>

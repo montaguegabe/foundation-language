@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		958E31CE1E0E357E004A0C2F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 958E31CD1E0E357E004A0C2F /* main.cpp */; };
+		95C7F1C91E10798F00174E2E /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95C7F1C71E10798F00174E2E /* Parser.cpp */; };
 		95F1D5101E0F144E00E94A16 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95431ACC1E0CEB25006322D7 /* libboost_program_options.a */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,8 @@
 		958E31CB1E0E357D004A0C2F /* Interpreter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Interpreter; sourceTree = BUILT_PRODUCTS_DIR; };
 		958E31CD1E0E357E004A0C2F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		958E31D21E0E3680004A0C2F /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		95C7F1C71E10798F00174E2E /* Parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parser.cpp; sourceTree = "<group>"; };
+		95C7F1C81E10798F00174E2E /* Parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Parser.hpp; sourceTree = "<group>"; };
 		95CC8EAC1E0F9A6100198796 /* example.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = example.hpp; sourceTree = "<group>"; };
 		95D702341E0CCCE70025406E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
 		95D702371E0CD8790025406E /* grammar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grammar.h; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				95D702381E0CE08C0025406E /* boost.h */,
 				95D702341E0CCCE70025406E /* ast.h */,
 				952DD11E1E0F763B00580F88 /* parse.h */,
+				95C7F1C71E10798F00174E2E /* Parser.cpp */,
+				95C7F1C81E10798F00174E2E /* Parser.hpp */,
 				95D702371E0CD8790025406E /* grammar.h */,
 				958E31D21E0E3680004A0C2F /* version.h */,
 				952DD11D1E0F413500580F88 /* tokens.h */,
@@ -155,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95C7F1C91E10798F00174E2E /* Parser.cpp in Sources */,
 				958E31CE1E0E357E004A0C2F /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

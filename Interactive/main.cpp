@@ -11,13 +11,17 @@
 #include <iostream>
 #include "version.h"
 //#include "ast.h"
-#include "parse.h"
+#include "Parser.hpp"
+#include "boost.h"
 
 static void printGreeting();
 
 int main(int argc, const char * argv[]) {
     
+    using namespace foundation;
     using boost::logic::tribool;
+    
+    Parser parser;
     
     printGreeting();
     
@@ -34,7 +38,8 @@ int main(int argc, const char * argv[]) {
         }
         
         aggregate += input;
-        tribool result = foundation::ast::fromString(aggregate);
+        tribool result = parser.fromString(aggregate);
+        //boost::logic::tribool result = true;
         
         if (!result) {
             std::cout << "Syntax error." << std::endl;
