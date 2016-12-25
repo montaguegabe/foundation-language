@@ -20,7 +20,7 @@ int main(int argc, const char * argv[]) {
     while (true) {
         std::cout << ">>> ";
         std::string input;
-        std::cin >> input;
+        std::getline(std::cin, input);
         
         if (input == "q" || input == "Q" || input == "quit()") {
             break;

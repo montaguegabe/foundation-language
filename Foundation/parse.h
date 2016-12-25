@@ -30,12 +30,16 @@ namespace foundation { namespace ast {
         LanguageTokens<LexerType> lexer;
         LanguageGrammar<IteratorType> grammar (lexer);
         
-        char const* first = str.c_str();
-        char const* last = &first[str.size()];
+        char const* first = str.c_str(); //str.begin();
+        char const* last = &first[str.size()]; //str.end();
         
-        bool success = lex::tokenize_and_parse(first, last, lexer, grammar);
+        //std::string::const_iterator first = str.begin();
+        //std::string::const_iterator last = str.end();
         
-        std::cout << (success ? "Good" : "Bad") << "\n";
+        unsigned result;
+        bool success = lex::tokenize_and_parse(first, last, lexer, grammar, result);
+        
+        std::cout << (success ? "Good" : "Bad") << " " << result << "\n";
     }
 }
 }

@@ -46,7 +46,7 @@ namespace foundation {
         lex::token_def<> if_, else_, while_;
         
         lex::token_def<std::string> identifier;
-        lex::token_def<unsigned int> constant;
+        lex::token_def<unsigned> constant;
     };
 }
 
