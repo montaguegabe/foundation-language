@@ -120,7 +120,10 @@ namespace foundation { namespace ast {
         typedef int result_type;
         
         // Should never be called on an empty node
-        int operator()(None) const { BOOST_ASSERT(0); return 0; }
+        int operator()(None) const {
+            // TODO: Throw exception
+            return 0;
+        }
         
         // Unsigned integer evaluation
         int operator()(unsigned int n) const { return n; }

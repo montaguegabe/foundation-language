@@ -23,23 +23,29 @@ namespace foundation {
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
-        : LanguageGrammar::base_type(expression)
+        : LanguageGrammar::base_type(program)
         {
             using boost::spirit::qi::_val;
+            using boost::spirit::qi::lit;
             using boost::phoenix::ref;
+            
+            program =
+            lit('{')
+            >> expression
+            >> lit('}');
             
             expression =
             term
             >> *(
-                 (ascii::char_('+') >> term)
-                 | (ascii::char_('-') >> term)
-                 );
+                (ascii::char_('+') >> term)
+                | (ascii::char_('-') >> term)
+            );
             
             term =
             factor
             >> *(
-                 (ascii::char_('*') >> factor)
-                 | (ascii::char_('/') >> factor)
+                (ascii::char_('*') >> factor)
+                | (ascii::char_('/') >> factor)
             );
             
             factor %=
@@ -49,6 +55,7 @@ namespace foundation {
             | (ascii::char_('+') >> factor);
         }
         
+        qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > program;
         qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > expression;
         qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > term;
         qi::rule<Iterator, ast::Operand(), qi::in_state_skipper<Lexer> > factor;

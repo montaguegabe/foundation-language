@@ -17,6 +17,8 @@ using namespace foundation;
 // Parses a string. Returns if a string is successfully parsed
 bool Parser::parse(std::string & str) {
     
+    // TODO: Edge case when parsing empty strings
+    
     // Generate the iterator pair used to expose the tokenized input stream.
     std::string::iterator it = str.begin();
     IteratorType iter = _tokenizer.begin(it, str.end());

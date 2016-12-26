@@ -41,8 +41,8 @@ int main(int argc, const char * argv[]) {
             break;
         }
         
-        // Add to aggregate
-        aggregate += input;
+        // Add to aggregate with new line at the end of the input
+        aggregate += input + "\n";
         
         // Determine if our input is balanced
         for (char & c : input) {
