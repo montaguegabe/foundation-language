@@ -14,6 +14,8 @@
 
 #pragma mark - Type declarations
 
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::OperationList
+
 namespace foundation { namespace ast {
     
     struct None {};
@@ -38,10 +40,14 @@ namespace foundation { namespace ast {
         Operand operand;
     };
     
-    // TODO: Fix name to be more clear
     struct OperationList {
         Operand first;
         std::list<Operation> rest;
+    };
+    
+    struct Assignment {
+        std::string identifier;
+        OperationList expression;
     };
 }}
 
@@ -61,6 +67,12 @@ BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::OperationList,
                           (foundation::ast::Operand, first)
                           (std::list<foundation::ast::Operation>, rest)
+                          )
+
+BOOST_FUSION_ADAPT_STRUCT(
+                          foundation::ast::Assignment,
+                          (std::string, identifier)
+                          (foundation::ast::OperationList, expression)
                           )
 
 

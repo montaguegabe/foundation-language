@@ -19,7 +19,7 @@ namespace foundation {
     
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, FOUNDATION_AST_BASE_TYPE(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -34,8 +34,7 @@ namespace foundation {
             >> mathExpression
             >> lit('}');
             
-            /*assignmentExpression %= tok.identifier
-            >> +(ascii::char_('=') >> mathExpression);*/
+            assignmentExpression = tok.identifier >> '=' >> mathExpression;
             
             mathExpression =
             term
@@ -84,8 +83,8 @@ namespace foundation {
             */
         }
         
-        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > program;
-        //qi::rule<Iterator, ast::Assignment(), qi::in_state_skipper<Lexer> > assignmentExpression;
+        qi::rule<Iterator, FOUNDATION_AST_BASE_TYPE(), qi::in_state_skipper<Lexer> > program;
+        qi::rule<Iterator, ast::Assignment(), qi::in_state_skipper<Lexer> > assignmentExpression;
         qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > mathExpression;
         qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > term;
         qi::rule<Iterator, ast::Operand(), qi::in_state_skipper<Lexer> > factor;

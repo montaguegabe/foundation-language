@@ -53,7 +53,7 @@ namespace foundation {
         BoostParser _parser;
         
         // The result of the parsing
-        ast::OperationList _result;
+        FOUNDATION_AST_BASE_TYPE _result;
     };
 }
 
