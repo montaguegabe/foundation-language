@@ -50,6 +50,9 @@ namespace foundation {
         // Internal parser and tokenizer
         Tokenizer _tokenizer;
         BoostParser _parser;
+        
+        // The result of the parsing
+        unsigned int _result;
     };
 }
 

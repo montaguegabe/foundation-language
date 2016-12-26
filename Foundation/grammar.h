@@ -18,7 +18,7 @@ namespace foundation {
     
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, unsigned int(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -28,7 +28,9 @@ namespace foundation {
             using qi::eps;
             using boost::phoenix::ref;
             
-            program
+            program = tok.constant[_val = _1];
+            
+            /*program
             = +block;
             
             block
@@ -72,12 +74,12 @@ namespace foundation {
             expression
             =   tok.identifier [ _val = _1 ]
             |   tok.constant   [ _val = _1 ]
-            ;
+            ;*/
         }
         
         typedef boost::variant<unsigned int, std::string> expression_type;
         
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > program, block, statement;
+        qi::rule<Iterator, unsigned int(), qi::in_state_skipper<Lexer> > program, block, statement;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > assignment, if_stmt;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > while_stmt;
         

@@ -25,7 +25,10 @@ bool Parser::parse(std::string & str) {
     std::string ws("WS");
     
     // Parse the string
-    bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self]);
+    unsigned int result;
+    bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self], result);
+    _result = result;
+    std::cout << "Result: " << _result << std::endl;
     
     // Return results
     if (r && iter == end) {
