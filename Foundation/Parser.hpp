@@ -14,7 +14,7 @@
 #include "boost.h"
 #include "tokens.h"
 #include "grammar.h"
-#include "ast2.h"
+#include "ast.h"
 
 namespace foundation {
     
@@ -53,7 +53,7 @@ namespace foundation {
         BoostParser _parser;
         
         // The result of the parsing
-        ast::program _result;
+        ast::Program _result;
     };
 }
 

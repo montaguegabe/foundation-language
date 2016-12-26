@@ -44,9 +44,8 @@
 		95C7F1C81E10798F00174E2E /* Parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Parser.hpp; sourceTree = "<group>"; };
 		95C7F1CE1E10AD1400174E2E /* ReturnTypeCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ReturnTypeCheck; sourceTree = BUILT_PRODUCTS_DIR; };
 		95C7F1D01E10AD1400174E2E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		95C7F1D51E10AFA300174E2E /* ast2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast2.h; sourceTree = "<group>"; };
+		95C7F1D51E10AFA300174E2E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
 		95CC8EAC1E0F9A6100198796 /* example.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = example.hpp; sourceTree = "<group>"; };
-		95D702341E0CCCE70025406E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
 		95D702371E0CD8790025406E /* grammar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grammar.h; sourceTree = "<group>"; };
 		95D702381E0CE08C0025406E /* boost.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = boost.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -120,8 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				95D702381E0CE08C0025406E /* boost.h */,
-				95D702341E0CCCE70025406E /* ast.h */,
-				95C7F1D51E10AFA300174E2E /* ast2.h */,
+				95C7F1D51E10AFA300174E2E /* ast.h */,
 				95D702371E0CD8790025406E /* grammar.h */,
 				952DD11D1E0F413500580F88 /* tokens.h */,
 				95C7F1C81E10798F00174E2E /* Parser.hpp */,

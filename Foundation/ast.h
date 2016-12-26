@@ -2,7 +2,7 @@
 //  ast.h
 //  Foundation
 //
-//  Created by Gabe Montague on 12/22/16.
+//  Created by Gabe Montague on 12/25/16.
 //  Copyright © 2016 Gabe Montague. All rights reserved.
 //
 
@@ -10,6 +10,7 @@
 #define ast_h
 
 #include "boost.h"
+#include <string>
 
 #pragma mark - Type declarations
 
@@ -44,32 +45,78 @@ namespace foundation { namespace ast {
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-    foundation::ast::Signed,
-    (char, sign)
-    (foundation::ast::Operand, operand)
-)
+                          foundation::ast::Signed,
+                          (char, sign)
+                          (foundation::ast::Operand, operand)
+                          )
 
 BOOST_FUSION_ADAPT_STRUCT(
-    foundation::ast::Operation,
-    (char, type)
-    (foundation::ast::Operand, operand)
-)
+                          foundation::ast::Operation,
+                          (char, type)
+                          (foundation::ast::Operand, operand)
+                          )
 
 BOOST_FUSION_ADAPT_STRUCT(
-    foundation::ast::Program,
-    (foundation::ast::Operand, first)
-    (std::list<foundation::ast::Operation>, rest)
-)
+                          foundation::ast::Program,
+                          (foundation::ast::Operand, first)
+                          (std::list<foundation::ast::Operation>, rest)
+                          )
 
 
 #pragma mark - Evaluation
 
 namespace foundation { namespace ast {
-
+    
+    // Print the AST
+    struct printer
+    {
+        typedef void result_type;
+        
+        // Primitives
+        void operator()(None) const {
+            std::cout << "(Empty node)";
+        }
+        
+        void operator()(unsigned int n) const {
+            std::cout << "(" << n << ")";
+        }
+        
+        void operator()(Operation const& x) const {
+            
+            boost::apply_visitor(*this, x.operand);
+            switch (x.type)
+            {
+                case '+': std::cout << "(add)"; break;
+                case '-': std::cout << "(subt)"; break;
+                case '*': std::cout << "(mult)"; break;
+                case '/': std::cout << "(div)"; break;
+            }
+        }
+        
+        void operator()(Signed const& x) const
+        {
+            boost::apply_visitor(*this, x.operand);
+            switch (x.sign) {
+                case '-': std::cout << "(neg)"; break;
+                case '+': std::cout << "(pos)"; break;
+            }
+        }
+        
+        void operator()(Program const& x) const
+        {
+            boost::apply_visitor(*this, x.first);
+            BOOST_FOREACH(Operation const & oper, x.rest)
+            {
+                std::cout << ' ';
+                (*this)(oper);
+            }
+        }
+    };
+    
     // Recursively evaluates an AST node
     struct eval {
         
-        // Traits
+        // Function traits
         typedef int result_type;
         
         // Should never be called on an empty node
@@ -118,5 +165,6 @@ namespace foundation { namespace ast {
         }
     };
 }}
+
 
 #endif /* ast_h */

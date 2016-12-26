@@ -58,8 +58,8 @@ namespace foundation {
             (identifier, ID_IDENTIFIER);
             
             this->self("WS")
-            =   lex::token_def<>("[ \\t\\n]+")
-            |   "\\/\\*[^*]*\\*+([^/*][^*]*\\*+)*\\/";
+            = lex::token_def<>("[ \\t\\n]+")
+            | "#[^\\n]+"; // Only single line comments are supported
         }
         
         lex::token_def<std::string> identifier;

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-#include "ast2.h"
+#include "ast.h"
 #include "Parser.hpp"
 
 using namespace foundation;
@@ -26,16 +26,14 @@ bool Parser::parse(std::string & str) {
     std::string ws("WS");
     
     // Parse the string
-    ast::program result;
+    ast::Program result;
     bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self], result);
     _result = result;
     
     // Debug printing of value
-    
-    typedef ast::printer ast_print;
-    ast_print print;
-    print(result);
-    //std::cout << print(result) << std::endl;
+    typedef ast::eval ast_eval;
+    ast_eval eval;
+    std::cout << eval(result) << std::endl;
     
     // Return results
     if (r && iter == end) {
