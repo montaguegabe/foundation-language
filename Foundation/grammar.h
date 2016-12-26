@@ -19,73 +19,64 @@ namespace foundation {
     
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, ast::program(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
-        : LanguageGrammar::base_type(program)
+        : LanguageGrammar::base_type(expression)
         {
-            using boost::spirit::_val;
-            using qi::eps;
+            using boost::spirit::qi::_val;
+            //using qi::eps;
             using boost::phoenix::ref;
             
-            program = "{" >> expression >> "}";
+            /*expression =
+            (term
+            >> *(
+                 (ascii::char_('+') >> term)
+                 | (ascii::char_('-') >> term)
+                 ))[std::cout << val("(expression)")];
             
-            /*program
-            = +block;*/
+            term =
+            (factor
+            >> *(
+                 (ascii::char_('*') >> factor)
+                 | (ascii::char_('/') >> factor)
+            ))[std::cout << val("(term)")];
             
-            /*block
-            = qi::lit('{')
-            >> *statement
-            >> qi::lit('}');
+            factor =
+            tok.constant[_val = _1, std::cout << val("(") << _1 << val(")")]
+            | '(' >> expression >> ')'
+            | ((ascii::char_('-') >> factor)[std::cout << val("(-)")])
+            | ((ascii::char_('+') >> factor)[std::cout << val("(+)")]);*/
             
-            statement
-            = assignment
-            | if_stmt
-            | while_stmt;*/
+            qi::uint_type uint_;
+            qi::char_type char_;
             
-            assignment
-            = (tok.identifier >> '=' >> expression >> ';')
-            [
-                std::cout << val("assignment statement to: ")
-                << _1 << "\n"
-            ];
-            
-            /*if_stmt
-            =   (   token(ID_IF) >> '(' >> expression >> ')' >> block
-                 >> -(token(ID_ELSE) >> block)
+            expression =
+            term
+            >> *(   (char_('+') >> term)
+                 |   (char_('-') >> term)
                  )
-            [
-             std::cout << val("if expression: ")
-             << _2 << "\n"
-             ]
             ;
             
-            while_stmt
-            =   (token(ID_WHILE) >> '(' >> expression >> ')' >> block)
-            [
-             std::cout << val("while expression: ")
-             << _2 << "\n"
-             ]
-            ;*/
+            term =
+            factor
+            >> *(   (char_('*') >> factor)
+                 |   (char_('/') >> factor)
+                 )
+            ;
             
-            //  since expression has a variant return type accommodating for
-            //  std::string and unsigned integer, both possible values may be
-            //  returned to the calling rule
-            expression
-            =   tok.identifier [ _val = _1 ]
-            |   tok.constant   [ _val = _1 ]
+            factor =
+            (tok.constant[_val = _1])
+            |   '(' >> expression >> ')'
+            |   (char_('-') >> factor)
+            |   (char_('+') >> factor)
             ;
         }
         
-        qi::rule<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> > program;
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > block, statement;
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > if_stmt;
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > assignment;
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > while_stmt;
-        
-        // The expression is the only rule having a return value
-        qi::rule<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> >  expression;
+        qi::rule<Iterator, ast::program(), qi::in_state_skipper<Lexer> > expression;
+        qi::rule<Iterator, ast::program(), qi::in_state_skipper<Lexer> > term;
+        qi::rule<Iterator, ast::operand(), qi::in_state_skipper<Lexer> > factor;
     };
 }
 

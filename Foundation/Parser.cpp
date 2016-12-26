@@ -26,9 +26,16 @@ bool Parser::parse(std::string & str) {
     std::string ws("WS");
     
     // Parse the string
-    ast::ExpressionType result;
+    ast::program result;
     bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self], result);
     _result = result;
+    
+    // Debug printing of value
+    
+    typedef ast::printer ast_print;
+    ast_print print;
+    print(result);
+    //std::cout << print(result) << std::endl;
     
     // Return results
     if (r && iter == end) {

@@ -40,8 +40,12 @@ namespace foundation {
             // Associate the tokens and the token set with the lexer
             this->self = lex::token_def<>('(')
             | ')'
-            | lex::char_('{')
-            | lex::char_('}')
+            | '{'
+            | '}'
+            | '-'
+            | '+'
+            | '*'
+            | '/'
             | '='
             | ';';
             

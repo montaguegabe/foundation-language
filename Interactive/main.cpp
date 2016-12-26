@@ -7,6 +7,8 @@
 //
 
 #define BOOST_VARIANT_USE_RELAXED_GET_BY_DEFAULT
+//#define BOOST_SPIRIT_NO_PREDEFINED_TERMINALS
+#define BOOST_SPIRIT_QI_DEBUG
 
 #include <iostream>
 #include "version.h"

@@ -53,7 +53,7 @@ namespace foundation {
         BoostParser _parser;
         
         // The result of the parsing
-        ast::ExpressionType _result;
+        ast::program _result;
     };
 }
 

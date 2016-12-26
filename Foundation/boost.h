@@ -18,7 +18,12 @@
 #include <boost/spirit/include/phoenix_statement.hpp>
 #include <boost/spirit/include/phoenix_algorithm.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
+#include <boost/spirit/include/phoenix.hpp>
 
-#include <boost/logic/tribool.hpp>
 
+#include <boost/variant/recursive_variant.hpp>
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/foreach.hpp>
+ 
 #endif /* boost_h */
