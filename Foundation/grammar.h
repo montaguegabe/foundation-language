@@ -16,9 +16,11 @@ namespace foundation {
     using namespace boost::spirit;
     using boost::phoenix::val;
     
+    typedef boost::variant<unsigned int, std::string> expression_type;
+    
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, unsigned int(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, expression_type(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -28,12 +30,12 @@ namespace foundation {
             using qi::eps;
             using boost::phoenix::ref;
             
-            program = tok.constant[_val = _1];
+            program = "{" >> expression >> "}";
             
             /*program
-            = +block;
+            = +block;*/
             
-            block
+            /*block
             = qi::lit('{')
             >> *statement
             >> qi::lit('}');
@@ -41,7 +43,7 @@ namespace foundation {
             statement
             = assignment
             | if_stmt
-            | while_stmt;
+            | while_stmt;*/
             
             assignment
             = (tok.identifier >> '=' >> expression >> ';')
@@ -50,7 +52,7 @@ namespace foundation {
                 << _1 << "\n"
             ];
             
-            if_stmt
+            /*if_stmt
             =   (   token(ID_IF) >> '(' >> expression >> ')' >> block
                  >> -(token(ID_ELSE) >> block)
                  )
@@ -66,7 +68,7 @@ namespace foundation {
              std::cout << val("while expression: ")
              << _2 << "\n"
              ]
-            ;
+            ;*/
             
             //  since expression has a variant return type accommodating for
             //  std::string and unsigned integer, both possible values may be
@@ -74,13 +76,13 @@ namespace foundation {
             expression
             =   tok.identifier [ _val = _1 ]
             |   tok.constant   [ _val = _1 ]
-            ;*/
+            ;
         }
         
-        typedef boost::variant<unsigned int, std::string> expression_type;
-        
-        qi::rule<Iterator, unsigned int(), qi::in_state_skipper<Lexer> > program, block, statement;
-        qi::rule<Iterator, qi::in_state_skipper<Lexer> > assignment, if_stmt;
+        qi::rule<Iterator, expression_type(), qi::in_state_skipper<Lexer> > program;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > block, statement;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > if_stmt;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > assignment;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > while_stmt;
         
         // The expression is the only rule having a return value

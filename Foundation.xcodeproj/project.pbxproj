@@ -9,11 +9,21 @@
 /* Begin PBXBuildFile section */
 		958E31CE1E0E357E004A0C2F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 958E31CD1E0E357E004A0C2F /* main.cpp */; };
 		95C7F1C91E10798F00174E2E /* Parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95C7F1C71E10798F00174E2E /* Parser.cpp */; };
+		95C7F1D11E10AD1400174E2E /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 95C7F1D01E10AD1400174E2E /* main.cpp */; };
 		95F1D5101E0F144E00E94A16 /* libboost_program_options.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 95431ACC1E0CEB25006322D7 /* libboost_program_options.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		958E31C91E0E357D004A0C2F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		95C7F1CC1E10AD1400174E2E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -32,6 +42,9 @@
 		958E31D21E0E3680004A0C2F /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		95C7F1C71E10798F00174E2E /* Parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Parser.cpp; sourceTree = "<group>"; };
 		95C7F1C81E10798F00174E2E /* Parser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Parser.hpp; sourceTree = "<group>"; };
+		95C7F1CE1E10AD1400174E2E /* ReturnTypeCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ReturnTypeCheck; sourceTree = BUILT_PRODUCTS_DIR; };
+		95C7F1D01E10AD1400174E2E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		95C7F1D51E10AFA300174E2E /* ast2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast2.h; sourceTree = "<group>"; };
 		95CC8EAC1E0F9A6100198796 /* example.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = example.hpp; sourceTree = "<group>"; };
 		95D702341E0CCCE70025406E /* ast.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ast.h; sourceTree = "<group>"; };
 		95D702371E0CD8790025406E /* grammar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = grammar.h; sourceTree = "<group>"; };
@@ -44,6 +57,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				95F1D5101E0F144E00E94A16 /* libboost_program_options.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95C7F1CB1E10AD1400174E2E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,11 +88,20 @@
 			path = Interactive;
 			sourceTree = "<group>";
 		};
+		95C7F1CF1E10AD1400174E2E /* ReturnTypeCheck */ = {
+			isa = PBXGroup;
+			children = (
+				95C7F1D01E10AD1400174E2E /* main.cpp */,
+			);
+			path = ReturnTypeCheck;
+			sourceTree = "<group>";
+		};
 		95D702211E0CCB880025406E = {
 			isa = PBXGroup;
 			children = (
 				95D7022C1E0CCB880025406E /* Foundation */,
 				958E31CC1E0E357D004A0C2F /* Interpreter */,
+				95C7F1CF1E10AD1400174E2E /* ReturnTypeCheck */,
 				95431ACB1E0CEB25006322D7 /* Frameworks */,
 				95D7022B1E0CCB880025406E /* Products */,
 			);
@@ -82,6 +111,7 @@
 			isa = PBXGroup;
 			children = (
 				958E31CB1E0E357D004A0C2F /* Interpreter */,
+				95C7F1CE1E10AD1400174E2E /* ReturnTypeCheck */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,6 +121,7 @@
 			children = (
 				95D702381E0CE08C0025406E /* boost.h */,
 				95D702341E0CCCE70025406E /* ast.h */,
+				95C7F1D51E10AFA300174E2E /* ast2.h */,
 				95D702371E0CD8790025406E /* grammar.h */,
 				952DD11D1E0F413500580F88 /* tokens.h */,
 				95C7F1C81E10798F00174E2E /* Parser.hpp */,
@@ -120,6 +151,23 @@
 			productReference = 958E31CB1E0E357D004A0C2F /* Interpreter */;
 			productType = "com.apple.product-type.tool";
 		};
+		95C7F1CD1E10AD1400174E2E /* ReturnTypeCheck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95C7F1D21E10AD1400174E2E /* Build configuration list for PBXNativeTarget "ReturnTypeCheck" */;
+			buildPhases = (
+				95C7F1CA1E10AD1400174E2E /* Sources */,
+				95C7F1CB1E10AD1400174E2E /* Frameworks */,
+				95C7F1CC1E10AD1400174E2E /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ReturnTypeCheck;
+			productName = ReturnTypeCheck;
+			productReference = 95C7F1CE1E10AD1400174E2E /* ReturnTypeCheck */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -130,6 +178,11 @@
 				ORGANIZATIONNAME = "Gabe Montague";
 				TargetAttributes = {
 					958E31CA1E0E357D004A0C2F = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = E6GA9X89TN;
+						ProvisioningStyle = Automatic;
+					};
+					95C7F1CD1E10AD1400174E2E = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = E6GA9X89TN;
 						ProvisioningStyle = Automatic;
@@ -149,6 +202,7 @@
 			projectRoot = "";
 			targets = (
 				958E31CA1E0E357D004A0C2F /* Interpreter */,
+				95C7F1CD1E10AD1400174E2E /* ReturnTypeCheck */,
 			);
 		};
 /* End PBXProject section */
@@ -160,6 +214,14 @@
 			files = (
 				95C7F1C91E10798F00174E2E /* Parser.cpp in Sources */,
 				958E31CE1E0E357E004A0C2F /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		95C7F1CA1E10AD1400174E2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				95C7F1D11E10AD1400174E2E /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,6 +258,26 @@
 					"$(inherited)",
 					/usr/local/Cellar/boost/1.59.0/lib,
 				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		95C7F1D31E10AD1400174E2E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = E6GA9X89TN;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		95C7F1D41E10AD1400174E2E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = E6GA9X89TN;
+				HEADER_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/include;
+				LIBRARY_SEARCH_PATHS = /usr/local/Cellar/boost/1.59.0/lib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -304,6 +386,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		95C7F1D21E10AD1400174E2E /* Build configuration list for PBXNativeTarget "ReturnTypeCheck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				95C7F1D31E10AD1400174E2E /* Debug */,
+				95C7F1D41E10AD1400174E2E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		95D702251E0CCB880025406E /* Build configuration list for PBXProject "Foundation" */ = {
 			isa = XCConfigurationList;

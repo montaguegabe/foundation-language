@@ -52,7 +52,7 @@ namespace foundation {
         BoostParser _parser;
         
         // The result of the parsing
-        unsigned int _result;
+        expression_type _result;
     };
 }
 
