@@ -18,13 +18,13 @@ namespace foundation { namespace ast {
     
     struct None {};
     struct Signed;
-    struct Program;
+    struct OperationList;
     
     typedef boost::variant<
         None,
         unsigned int,
         boost::recursive_wrapper<Signed>,
-        boost::recursive_wrapper<Program>
+        boost::recursive_wrapper<OperationList>
     >
     Operand;
     
@@ -38,7 +38,8 @@ namespace foundation { namespace ast {
         Operand operand;
     };
     
-    struct Program {
+    // TODO: Fix name to be more clear
+    struct OperationList {
         Operand first;
         std::list<Operation> rest;
     };
@@ -57,7 +58,7 @@ BOOST_FUSION_ADAPT_STRUCT(
                           )
 
 BOOST_FUSION_ADAPT_STRUCT(
-                          foundation::ast::Program,
+                          foundation::ast::OperationList,
                           (foundation::ast::Operand, first)
                           (std::list<foundation::ast::Operation>, rest)
                           )
@@ -74,42 +75,34 @@ namespace foundation { namespace ast {
         
         // Primitives
         void operator()(None) const {
-            std::cout << "(Empty node)";
+            std::cout << "None";
         }
         
         void operator()(unsigned int n) const {
-            std::cout << "(" << n << ")";
+            std::cout << n;
         }
         
         void operator()(Operation const& x) const {
             
+            std::cout << "Operation{operand = ";
             boost::apply_visitor(*this, x.operand);
-            switch (x.type)
-            {
-                case '+': std::cout << "(add)"; break;
-                case '-': std::cout << "(subt)"; break;
-                case '*': std::cout << "(mult)"; break;
-                case '/': std::cout << "(div)"; break;
-            }
+            std::cout << "; type = '" << x.type << "';}";
         }
         
-        void operator()(Signed const& x) const
-        {
+        void operator()(Signed const& x) const {
+            std::cout << "Signed{operand = ";
             boost::apply_visitor(*this, x.operand);
-            switch (x.sign) {
-                case '-': std::cout << "(neg)"; break;
-                case '+': std::cout << "(pos)"; break;
-            }
+            std::cout << "; sign = '" << x.sign << "';}";
         }
         
-        void operator()(Program const& x) const
-        {
+        void operator()(OperationList const& x) const {
+            std::cout << "OperationList{[";
             boost::apply_visitor(*this, x.first);
-            BOOST_FOREACH(Operation const & oper, x.rest)
-            {
-                std::cout << ' ';
+            BOOST_FOREACH(Operation const & oper, x.rest) {
+                std::cout << ", "; //<< std::endl;
                 (*this)(oper);
             }
+            std::cout << "]}";
         }
     };
     
@@ -157,8 +150,8 @@ namespace foundation { namespace ast {
             return 0;
         }
         
-        // Program evaluation
-        int operator()(Program const& x) const {
+        // Operand list evaluation
+        int operator()(OperationList const& x) const {
             
             int state = boost::apply_visitor(*this, x.first);
             BOOST_FOREACH(Operation const& oper, x.rest) {

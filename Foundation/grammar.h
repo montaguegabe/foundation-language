@@ -19,7 +19,7 @@ namespace foundation {
     
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, ast::Program(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -31,10 +31,13 @@ namespace foundation {
             
             program =
             lit('{')
-            >> expression
+            >> mathExpression
             >> lit('}');
             
-            expression =
+            /*assignmentExpression %= tok.identifier
+            >> +(ascii::char_('=') >> mathExpression);*/
+            
+            mathExpression =
             term
             >> *(
                 (ascii::char_('+') >> term)
@@ -50,15 +53,43 @@ namespace foundation {
             
             factor %=
             tok.constant[_val = _1]
-            | '(' >> expression >> ')'
+            | '(' >> mathExpression >> ')'
             | (ascii::char_('-') >> factor)
             | (ascii::char_('+') >> factor);
+            
+            /*
+
+            program
+            = block;
+
+            block
+            = qi::lit('{')
+            >> *statement
+            >> qi::lit('}');
+
+            statement
+            = assignment
+            | if_stmt
+            | while_stmt;
+
+            assignment
+            = (tok.identifier >> '=' >> expression >> ';');
+
+            if_stmt
+            = (token(ID_IF) >> '(' >> expression >> ')' >> block
+            >> -(token(ID_ELSE) >> block));
+
+            while_stmt = (token(ID_WHILE) >> '(' >> expression >> ')' >> block);
+            
+            */
         }
         
-        qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > program;
-        qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > expression;
-        qi::rule<Iterator, ast::Program(), qi::in_state_skipper<Lexer> > term;
+        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > program;
+        //qi::rule<Iterator, ast::Assignment(), qi::in_state_skipper<Lexer> > assignmentExpression;
+        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > mathExpression;
+        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > term;
         qi::rule<Iterator, ast::Operand(), qi::in_state_skipper<Lexer> > factor;
+        
     };
 }
 

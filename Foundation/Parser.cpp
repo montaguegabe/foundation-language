@@ -28,14 +28,17 @@ bool Parser::parse(std::string & str) {
     std::string ws("WS");
     
     // Parse the string
-    ast::Program result;
+    ast::OperationList result;
     bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self], result);
     _result = result;
     
     // Debug printing of value
+    typedef ast::printer ast_print;
     typedef ast::eval ast_eval;
     ast_eval eval;
-    std::cout << eval(result) << std::endl;
+    ast_print print;
+    print(result);
+    std::cout << std::endl << eval(result) << std::endl;
     
     // Return results
     if (r && iter == end) {
