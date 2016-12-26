@@ -118,13 +118,13 @@
 		95D7022C1E0CCB880025406E /* Foundation */ = {
 			isa = PBXGroup;
 			children = (
+				958E31D21E0E3680004A0C2F /* version.h */,
 				95D702381E0CE08C0025406E /* boost.h */,
 				95C7F1D51E10AFA300174E2E /* ast.h */,
 				95D702371E0CD8790025406E /* grammar.h */,
 				952DD11D1E0F413500580F88 /* tokens.h */,
 				95C7F1C81E10798F00174E2E /* Parser.hpp */,
 				95C7F1C71E10798F00174E2E /* Parser.cpp */,
-				958E31D21E0E3680004A0C2F /* version.h */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -392,6 +392,7 @@
 				95C7F1D41E10AD1400174E2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		95D702251E0CCB880025406E /* Build configuration list for PBXProject "Foundation" */ = {
 			isa = XCConfigurationList;

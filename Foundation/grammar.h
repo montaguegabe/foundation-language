@@ -11,6 +11,7 @@
 
 #include "boost.h"
 #include "ast.h"
+#include "tokens.h"
 
 namespace foundation {
     
@@ -23,72 +24,42 @@ namespace foundation {
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
-        : LanguageGrammar::base_type(program)
+        : LanguageGrammar::base_type(block)
         {
             using boost::spirit::qi::_val;
             using boost::spirit::qi::lit;
+            using boost::spirit::token;
             using boost::phoenix::ref;
             
-            program =
-            lit('{')
-            >> mathExpression
-            >> lit('}');
+            // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
+            block =
+            '{'
+            >> expression
+            >> '}';
             
-            assignmentExpression = tok.identifier >> '=' >> mathExpression;
+            // Build the definition of an expression from the most atomic level upwards
+            atomicExpression %=
+            tok.identifier
+            | tok.constant
+            | ('(' >> expression >> ',' >> expression >> ')');
             
-            mathExpression =
-            term
-            >> *(
-                (ascii::char_('+') >> term)
-                | (ascii::char_('-') >> term)
-            );
+            // An expression with an atomic "postfix" on the end
+            /*postfixExpression =
+            atomicExpression
+            >> (
+                lit('(') >> lit(')')
+                | lit('.') >> tok.identifier
+                | token(ID_INCREMENT)
+                | token(ID_DECREMENT)
+            );*/
             
-            term =
-            factor
-            >> *(
-                (ascii::char_('*') >> factor)
-                | (ascii::char_('/') >> factor)
-            );
-            
-            factor %=
-            tok.constant[_val = _1]
-            | '(' >> mathExpression >> ')'
-            | (ascii::char_('-') >> factor)
-            | (ascii::char_('+') >> factor);
-            
-            /*
-
-            program
-            = block;
-
-            block
-            = qi::lit('{')
-            >> *statement
-            >> qi::lit('}');
-
-            statement
-            = assignment
-            | if_stmt
-            | while_stmt;
-
-            assignment
-            = (tok.identifier >> '=' >> expression >> ';');
-
-            if_stmt
-            = (token(ID_IF) >> '(' >> expression >> ')' >> block
-            >> -(token(ID_ELSE) >> block));
-
-            while_stmt = (token(ID_WHILE) >> '(' >> expression >> ')' >> block);
-            
-            */
+            // Most generalized definition of an expression
+            expression = atomicExpression;
         }
         
-        qi::rule<Iterator, FOUNDATION_AST_BASE_TYPE(), qi::in_state_skipper<Lexer> > program;
-        qi::rule<Iterator, ast::Assignment(), qi::in_state_skipper<Lexer> > assignmentExpression;
-        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > mathExpression;
-        qi::rule<Iterator, ast::OperationList(), qi::in_state_skipper<Lexer> > term;
-        qi::rule<Iterator, ast::Operand(), qi::in_state_skipper<Lexer> > factor;
-        
+        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > block;
+        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > atomicExpression;
+        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > expression;
     };
 }
 

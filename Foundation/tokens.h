@@ -25,7 +25,9 @@ namespace foundation {
         ID_IF,
         ID_ELSE,
         ID_WHILE,
-        ID_IDENTIFIER
+        ID_IDENTIFIER,
+        ID_INCREMENT,
+        ID_DECREMENT
     };
     
     template <typename Lexer>
@@ -37,7 +39,7 @@ namespace foundation {
             identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
             constant = "[0-9]+";
             
-            // Associate the tokens and the token set with the lexer
+            // Define single-symbol tokens
             this->self = lex::token_def<>('(')
             | ')'
             | '{'
@@ -47,6 +49,7 @@ namespace foundation {
             | '*'
             | '/'
             | '='
+            | ','
             | ';';
             
             // Define tokens
@@ -55,8 +58,11 @@ namespace foundation {
             ("if", ID_IF)
             ("else", ID_ELSE)
             ("while", ID_WHILE)
-            (identifier, ID_IDENTIFIER);
+            (identifier, ID_IDENTIFIER)
+            ("$$", ID_INCREMENT)
+            ("%%", ID_DECREMENT);
             
+            // Define whitespace token for skipping
             this->self("WS")
             = lex::token_def<>("[ \\t\\n]+");
             //| "#[^\\n]+"; // Only single line comments are supported

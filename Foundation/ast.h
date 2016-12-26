@@ -14,67 +14,30 @@
 
 #pragma mark - Type declarations
 
-#define FOUNDATION_AST_BASE_TYPE foundation::ast::OperationList
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::AtomicExpression
 
 namespace foundation { namespace ast {
     
-    struct None {};
-    struct Signed;
-    struct OperationList;
+    struct DoubleAtomicExpression;
     
     typedef boost::variant<
-        None,
         unsigned int,
-        boost::recursive_wrapper<Signed>,
-        boost::recursive_wrapper<OperationList>
+        std::string,
+        boost::recursive_wrapper<DoubleAtomicExpression>
     >
-    Operand;
+    AtomicExpression;
     
-    struct Signed {
-        char sign;
-        Operand operand;
-    };
-    
-    struct Operation {
-        char type;
-        Operand operand;
-    };
-    
-    struct OperationList {
-        Operand first;
-        std::list<Operation> rest;
-    };
-    
-    struct Assignment {
-        std::string identifier;
-        OperationList expression;
+    struct DoubleAtomicExpression {
+        AtomicExpression first;
+        AtomicExpression second;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-                          foundation::ast::Signed,
-                          (char, sign)
-                          (foundation::ast::Operand, operand)
-                          )
-
-BOOST_FUSION_ADAPT_STRUCT(
-                          foundation::ast::Operation,
-                          (char, type)
-                          (foundation::ast::Operand, operand)
-                          )
-
-BOOST_FUSION_ADAPT_STRUCT(
-                          foundation::ast::OperationList,
-                          (foundation::ast::Operand, first)
-                          (std::list<foundation::ast::Operation>, rest)
-                          )
-
-BOOST_FUSION_ADAPT_STRUCT(
-                          foundation::ast::Assignment,
-                          (std::string, identifier)
-                          (foundation::ast::OperationList, expression)
-                          )
-
+    foundation::ast::DoubleAtomicExpression,
+    (foundation::ast::AtomicExpression, first)
+    (foundation::ast::AtomicExpression, second)
+)
 
 #pragma mark - Evaluation
 
@@ -85,41 +48,34 @@ namespace foundation { namespace ast {
     {
         typedef void result_type;
         
-        // Primitives
-        void operator()(None) const {
-            std::cout << "None";
-        }
-        
+        // Unsigned int type
         void operator()(unsigned int n) const {
             std::cout << n;
         }
         
-        void operator()(Operation const& x) const {
-            
-            std::cout << "Operation{operand = ";
-            boost::apply_visitor(*this, x.operand);
-            std::cout << "; type = '" << x.type << "';}";
+        // String type
+        void operator()(std::string str) const {
+            std::cout << str;
         }
         
-        void operator()(Signed const& x) const {
-            std::cout << "Signed{operand = ";
-            boost::apply_visitor(*this, x.operand);
-            std::cout << "; sign = '" << x.sign << "';}";
+        // Atomic expression type
+        void operator()(DoubleAtomicExpression const & doubleExpr) const {
+            std::cout << "DoubleAE{";
+            boost::apply_visitor(*this, doubleExpr.first);
+            std::cout << ", ";
+            boost::apply_visitor(*this, doubleExpr.second);
+            std::cout << "}";
         }
         
-        void operator()(OperationList const& x) const {
-            std::cout << "OperationList{[";
-            boost::apply_visitor(*this, x.first);
-            BOOST_FOREACH(Operation const & oper, x.rest) {
-                std::cout << ", "; //<< std::endl;
-                (*this)(oper);
-            }
-            std::cout << "]}";
+        void operator()(AtomicExpression const & expr) const {
+            std::cout << "AE{";
+            boost::apply_visitor(*this, expr);
+            std::cout << "}";
         }
     };
     
     // Recursively evaluates an AST node
-    struct eval {
+    /*struct eval {
         
         // Function traits
         typedef int result_type;
@@ -171,7 +127,12 @@ namespace foundation { namespace ast {
             }
             return state;
         }
-    };
+        
+        // Assignment operators
+        int operator()(Assignment const & x) const {
+            return boost::apply_visitor(*this, x.operand);
+        }
+    };*/
 }}
 
 
