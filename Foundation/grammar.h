@@ -10,17 +10,16 @@
 #define grammar_h
 
 #include "boost.h"
+#include "ast2.h"
 
 namespace foundation {
     
     using namespace boost::spirit;
     using boost::phoenix::val;
     
-    typedef boost::variant<unsigned int, std::string> expression_type;
-    
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, expression_type(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -79,14 +78,14 @@ namespace foundation {
             ;
         }
         
-        qi::rule<Iterator, expression_type(), qi::in_state_skipper<Lexer> > program;
+        qi::rule<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> > program;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > block, statement;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > if_stmt;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > assignment;
         qi::rule<Iterator, qi::in_state_skipper<Lexer> > while_stmt;
         
         // The expression is the only rule having a return value
-        qi::rule<Iterator, expression_type(), qi::in_state_skipper<Lexer> >  expression;
+        qi::rule<Iterator, ast::ExpressionType(), qi::in_state_skipper<Lexer> >  expression;
     };
 }
 

@@ -11,6 +11,12 @@
 
 #include "boost.h"
 
-
+namespace foundation { namespace ast {
+  
+    // Declare type for expressions
+    typedef boost::variant<unsigned int, std::string> ExpressionType;
+    
+    
+} }
 
 #endif /* ast2_h */

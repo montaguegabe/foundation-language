@@ -6,10 +6,11 @@
 //  Copyright © 2016 Gabe Montague. All rights reserved.
 //
 
-#include "Parser.hpp"
-
 #include <iostream>
 #include <string>
+
+#include "ast2.h"
+#include "Parser.hpp"
 
 using namespace foundation;
 
@@ -25,11 +26,9 @@ bool Parser::parse(std::string & str) {
     std::string ws("WS");
     
     // Parse the string
-    expression_type result;
+    ast::ExpressionType result;
     bool r = qi::phrase_parse(iter, end, _parser, qi::in_state(ws)[_tokenizer.self], result);
     _result = result;
-    
-    std::cout << "Result:";
     
     // Return results
     if (r && iter == end) {
