@@ -13,6 +13,8 @@
 #include "ast.h"
 #include "tokens.h"
 
+#define FOUNDATION_SEM_COUT(a) (std::cout << val(a) << std::endl)
+
 namespace foundation {
     
     using namespace boost::spirit;
@@ -45,22 +47,24 @@ namespace foundation {
             | ('(' >> expression >> ')');
             
             // An expression with an atomic "postfix" on the end
-            /*postfixExpression =
-            atomicExpression
-            >> (
-                lit('(') >> lit(')')
-                | lit('.') >> tok.identifier
-                | token(ID_INCREMENT)
-                | token(ID_DECREMENT)
-            );*/
+            postfixExpression %=
+            (atomicExpression | postfixExpression)
+            >> (token(ID_INCREMENT) | token(ID_DECREMENT));
+            
+            //| (postfixExpression >> lit('(') >> ')')
+            //| (postfixExpression >> lit(.) >> tok.identifier)
+            
+            //postfixExpressionRec = lit('[') >> postfixExpression >> lit(']')
             
             // Most generalized definition of an expression
-            expression = atomicExpression;
+            expression = postfixExpression;
         }
         
-        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > block;
+        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > block;
         qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > atomicExpression;
-        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > expression;
+        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
+        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpressionRec;
+        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > expression;
     };
 }
 

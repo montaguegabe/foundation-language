@@ -53,18 +53,23 @@ namespace foundation {
             | '/'
             | '='
             | ','
+            | '^'
+            | '!'
+            | '%'
             | ';';
             
-            // Define tokens
+            // Define tokens in order of precedence
+            
+            
             this->self.add
+            ("while", ID_WHILE)
+            ("if", ID_IF)
+            ("else", ID_ELSE)
             (constant, ID_CONSTANT)
             (identifier, ID_IDENTIFIER)
             (string, ID_STRING)
-            ("if", ID_IF)
-            ("else", ID_ELSE)
-            ("while", ID_WHILE)
-            ("$$", ID_INCREMENT)
-            ("%%", ID_DECREMENT);
+            ("\\+\\+", ID_INCREMENT)
+            ("--", ID_DECREMENT);
             
             // Define whitespace token for skipping
             this->self("WS")
@@ -75,6 +80,7 @@ namespace foundation {
         lex::token_def<std::string> identifier;
         lex::token_def<unsigned int> constant;
         lex::token_def<std::string> string;
+        lex::token_def<lex::omit> marker;
     };
 }
 

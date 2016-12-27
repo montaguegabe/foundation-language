@@ -14,28 +14,39 @@
 
 #pragma mark - Type declarations
 
-#define FOUNDATION_AST_BASE_TYPE foundation::ast::AtomicExpression
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
 
 namespace foundation { namespace ast {
     
-    struct AtomicExpressionRec;
-    
+    // Atomic expression
+    struct PostfixExpression;
     typedef boost::variant<
         unsigned int,
         std::string,
-        boost::recursive_wrapper<AtomicExpressionRec>
+        boost::recursive_wrapper<PostfixExpression>
     >
     AtomicExpression;
     
-    struct AtomicExpressionRec {
-        AtomicExpression wrappedValue;
+    // Postfix expression
+    struct PostfixExpression;
+    
+    typedef boost::variant<
+        boost::recursive_wrapper<AtomicExpression>,
+        boost::recursive_wrapper<PostfixExpression>
+    >
+    PostfixOrAtomicExpression;
+    
+    struct PostfixExpression {
+        PostfixOrAtomicExpression base;
+        std::string postfix;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-    foundation::ast::AtomicExpressionRec,
-    (foundation::ast::AtomicExpression, wrappedValue)
-)
+                          foundation::ast::PostfixExpression,
+                          (foundation::ast::PostfixOrAtomicExpression, base)
+                          (std::string, postfix)
+                          )
 
 #pragma mark - Evaluation
 
@@ -57,16 +68,18 @@ namespace foundation { namespace ast {
         }
         
         // Atomic expression type
-        void operator()(AtomicExpressionRec const & wrapper) const {
-            std::cout << "AERec{";
-            boost::apply_visitor(*this, wrapper.wrappedValue);
-            std::cout << "}";
-        }
-        
         void operator()(AtomicExpression const & expr) const {
             std::cout << "AE{";
             boost::apply_visitor(*this, expr);
             std::cout << "}";
+        }
+        
+        // Postfix expression type
+        void operator()(PostfixExpression const & expr) const {
+            std::cout << "PFE{";
+            boost::apply_visitor(*this, expr.base);
+            std::cout << ", pf='" << expr.postfix;
+            std::cout << "'}";
         }
     };
     
