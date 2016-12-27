@@ -18,25 +18,23 @@
 
 namespace foundation { namespace ast {
     
-    struct DoubleAtomicExpression;
+    struct AtomicExpressionRec;
     
     typedef boost::variant<
         unsigned int,
         std::string,
-        boost::recursive_wrapper<DoubleAtomicExpression>
+        boost::recursive_wrapper<AtomicExpressionRec>
     >
     AtomicExpression;
     
-    struct DoubleAtomicExpression {
-        AtomicExpression first;
-        AtomicExpression second;
+    struct AtomicExpressionRec {
+        AtomicExpression wrappedValue;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
-    foundation::ast::DoubleAtomicExpression,
-    (foundation::ast::AtomicExpression, first)
-    (foundation::ast::AtomicExpression, second)
+    foundation::ast::AtomicExpressionRec,
+    (foundation::ast::AtomicExpression, wrappedValue)
 )
 
 #pragma mark - Evaluation
@@ -59,11 +57,9 @@ namespace foundation { namespace ast {
         }
         
         // Atomic expression type
-        void operator()(DoubleAtomicExpression const & doubleExpr) const {
-            std::cout << "DoubleAE{";
-            boost::apply_visitor(*this, doubleExpr.first);
-            std::cout << ", ";
-            boost::apply_visitor(*this, doubleExpr.second);
+        void operator()(AtomicExpressionRec const & wrapper) const {
+            std::cout << "AERec{";
+            boost::apply_visitor(*this, wrapper.wrappedValue);
             std::cout << "}";
         }
         

@@ -42,7 +42,7 @@ namespace foundation {
             tok.identifier
             | tok.constant
             | tok.string
-            | ('(' >> expression >> ',' >> expression >> ')');
+            | ('(' >> expression >> ')');
             
             // An expression with an atomic "postfix" on the end
             /*postfixExpression =
