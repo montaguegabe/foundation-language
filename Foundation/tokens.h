@@ -22,12 +22,13 @@ namespace foundation {
     // Define token identifiers
     enum token_ids {
         ID_CONSTANT = 1000,
+        ID_IDENTIFIER,
+        ID_STRING,
+        ID_INCREMENT,
+        ID_DECREMENT,
         ID_IF,
         ID_ELSE,
-        ID_WHILE,
-        ID_IDENTIFIER,
-        ID_INCREMENT,
-        ID_DECREMENT
+        ID_WHILE
     };
     
     template <typename Lexer>
@@ -35,9 +36,15 @@ namespace foundation {
         
         LanguageTokens() {
             
-            // Define regular expressions
+            // Define patterns
+            this->self.add_pattern
+                ("ESC", "\\\\");
+            
+            // Assign token definitions
             identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
             constant = "[0-9]+";
+            //string = "\\\"[^\\\"]+\\\""; // For without escape
+            string = "\\\"([^\\\"]|\\\\\\\")+\\\""; // Allows escaped quotes
             
             // Define single-symbol tokens
             this->self = lex::token_def<>('(')
@@ -55,21 +62,23 @@ namespace foundation {
             // Define tokens
             this->self.add
             (constant, ID_CONSTANT)
+            (identifier, ID_IDENTIFIER)
+            (string, ID_STRING)
             ("if", ID_IF)
             ("else", ID_ELSE)
             ("while", ID_WHILE)
-            (identifier, ID_IDENTIFIER)
             ("$$", ID_INCREMENT)
             ("%%", ID_DECREMENT);
             
             // Define whitespace token for skipping
             this->self("WS")
-            = lex::token_def<>("[ \\t\\n]+");
-            //| "#[^\\n]+"; // Only single line comments are supported
+            = lex::token_def<>("[ \\t\\n]+")
+            | "#[^\\n]+"; // Only single line comments are supported
         }
         
         lex::token_def<std::string> identifier;
         lex::token_def<unsigned int> constant;
+        lex::token_def<std::string> string;
     };
 }
 
