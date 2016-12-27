@@ -29,7 +29,6 @@ namespace foundation {
             using qi::_val;
             using qi::lit;
             using boost::phoenix::ref;
-            using qi::lexeme;
             using ascii::char_;
             
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
@@ -60,7 +59,6 @@ namespace foundation {
         }
         
         qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > block;
-        qi::rule<Iterator, std::string(), qi::in_state_skipper<Lexer> > quotedString;
         qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > atomicExpression;
         qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > expression;
     };

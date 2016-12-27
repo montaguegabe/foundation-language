@@ -36,10 +36,6 @@ namespace foundation {
         
         LanguageTokens() {
             
-            // Define patterns
-            this->self.add_pattern
-                ("ESC", "\\\\");
-            
             // Assign token definitions
             identifier = "[a-zA-Z_][a-zA-Z0-9_]*";
             constant = "[0-9]+";

@@ -12,6 +12,7 @@
 #include "boost.h"
 
 namespace qi = boost::spirit::qi;
+namespace ascii = boost::spirit::ascii;
 
 // Test grammar return type
 using namespace boost;
@@ -42,10 +43,14 @@ int main(int argc, const char * argv[]) {
     // The expression is the only rule having a return value
     typedef boost::variant<unsigned int, std::string> expression_type;
     
-    qi::rule<BaseIteratorType, expression_type()> expression
+    using ascii::char_;
+    using boost::spirit::token;
+    
+    /*qi::rule<BaseIteratorType, expression_type()> expression
     =   qi::double_
     |   qi::int_
     ;
     display_attribute_of_parser(qi::int_ >> '=' >> expression);
-    display_attribute_of_parser(qi::int_ >> '=' >> (qi::double_|qi::int_));
+    display_attribute_of_parser(qi::int_ >> '=' >> (qi::double_|qi::int_));*/
+    display_attribute_of_parser(char_('+') | char_('-'));
 }
