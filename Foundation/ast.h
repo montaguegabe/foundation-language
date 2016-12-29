@@ -14,6 +14,7 @@
 
 // What we parse to get at command line
 #define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::PostfixExpression
+//foundation::ast::PostfixExpression
 
 // What we define as an expression
 #define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
@@ -33,17 +34,34 @@ namespace foundation { namespace ast {
     AtomicExpression;
     
     // Postfix expression
-    typedef std::string Postfix;
+    typedef std::vector<FOUNDATION_AST_EXPRESSION_TYPE> ExpressionList;
+    typedef std::string PostfixSimple;
+    struct PostfixExpressionList {
+        std::string stringPart;
+        ExpressionList listPart;
+    };
+    typedef boost::variant<
+        PostfixSimple,
+        PostfixExpressionList
+    >
+    Postfix;
+    
     struct PostfixExpression {
         AtomicExpression base;
-        std::vector<Postfix> postfix;
+        std::vector<Postfix> postfixList;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
+                          foundation::ast::PostfixExpressionList,
+                          (std::string, stringPart)
+                          (foundation::ast::ExpressionList, listPart)
+                          )
+
+BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::PostfixExpression,
                           (foundation::ast::AtomicExpression, base)
-                          (std::vector<foundation::ast::Postfix>, postfix)
+                          (std::vector<foundation::ast::Postfix>, postfixList)
                           )
 
 #pragma mark - Evaluation

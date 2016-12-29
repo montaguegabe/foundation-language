@@ -31,14 +31,14 @@ namespace foundation {
             using qi::_val;
             using qi::lit;
             using qi::eps;
-            using boost::phoenix::ref;
+            //using boost::phoenix::ref;
             using ascii::char_;
             
             // Most generalized definition of an expression
             expression = postfixExpression.alias();
             
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
-            block = '{' >> expression >> '}';
+            block = '{' >> postfixExpression >> '}';
             
             // Build the definition of an expression from the most atomic level upwards
             atomicExpression %=
@@ -48,12 +48,17 @@ namespace foundation {
             | '(' >> expression >> ')';
             
             // An expression with a postfix on the end
-            //expressionList %= (expression % ',');
-            postfix %= //char_('[') >> expressionList >> ']'
-            //| char_('(') >> ((expression % ',') | eps) >> ')'
+            postfixSimple %=
             char_('.') >> tok.identifier
             | token(ID_INCREMENT)
             | token(ID_DECREMENT);
+            
+            expressionList %= (expression % ',');
+            postfixExpressionList %=
+            char_('(') >> expressionList >> ')'
+            | char_('[') >> expressionList >> ']';
+            
+            postfix %= postfixSimple | postfixExpressionList;
             postfixExpression %= atomicExpression >> *postfix;
             
             // An expression with a unary operator
@@ -90,7 +95,9 @@ namespace foundation {
         // Rule definitions
         qi::rule<Iterator, FOUNDATION_AST_BASE_TYPE(), qi::in_state_skipper<Lexer> > block;
         qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > atomicExpression;
-        //qi::rule<Iterator, (), qi::in_state_skipper<Lexer> > expressionList;
+        qi::rule<Iterator, ast::ExpressionList(), qi::in_state_skipper<Lexer> > expressionList;
+        qi::rule<Iterator, ast::PostfixSimple(), qi::in_state_skipper<Lexer> > postfixSimple;
+        qi::rule<Iterator, ast::PostfixExpressionList(), qi::in_state_skipper<Lexer> > postfixExpressionList;
         qi::rule<Iterator, ast::Postfix(), qi::in_state_skipper<Lexer> > postfix;
         qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
         qi::rule<Iterator,  qi::in_state_skipper<Lexer> > unaryOperator;

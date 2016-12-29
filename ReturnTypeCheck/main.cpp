@@ -11,8 +11,7 @@
 #include <iostream>
 #include "boost.h"
 
-namespace qi = boost::spirit::qi;
-namespace ascii = boost::spirit::ascii;
+using namespace boost::spirit;
 
 // Test grammar return type
 using namespace boost;
@@ -45,6 +44,8 @@ int main(int argc, const char * argv[]) {
     
     using ascii::char_;
     using boost::spirit::token;
+    using qi::int_;
+    using qi::double_;
     
     /*qi::rule<BaseIteratorType, expression_type()> expression
     =   qi::double_
@@ -52,5 +53,8 @@ int main(int argc, const char * argv[]) {
     ;
     display_attribute_of_parser(qi::int_ >> '=' >> expression);
     display_attribute_of_parser(qi::int_ >> '=' >> (qi::double_|qi::int_));*/
-    display_attribute_of_parser(char_('+') | char_('-'));
+    display_attribute_of_parser(
+                                char_('[') >> (double_ % ',') >> ']'
+                                | char_('(') >> (double_ % ',' | eps) >> ')'
+                                );
 }
