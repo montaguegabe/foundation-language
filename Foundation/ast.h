@@ -13,11 +13,12 @@
 #include <string>
 
 // What we parse to get at command line
-#define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::PostfixExpression
+#define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::UnaryExpression
+#define FOUNDATION_AST_EXPRESSION_NAME UnaryExpression
 //foundation::ast::PostfixExpression
 
 // What we define as an expression
-#define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::UnaryExpression
 
 
 #pragma mark - Type declarations
@@ -25,16 +26,16 @@
 namespace foundation { namespace ast {
     
     // Atomic expression
-    struct PostfixExpression;
+    struct FOUNDATION_AST_EXPRESSION_NAME;
     typedef boost::variant<
         unsigned int,
         std::string,
-        boost::recursive_wrapper<PostfixExpression>
+        boost::recursive_wrapper<FOUNDATION_AST_EXPRESSION_NAME>
     >
     AtomicExpression;
     
     // Postfix expression
-    typedef std::vector<FOUNDATION_AST_EXPRESSION_TYPE> ExpressionList;
+    typedef std::vector<FOUNDATION_AST_EXPRESSION_NAME> ExpressionList;
     typedef std::string PostfixSimple;
     struct PostfixExpressionList {
         std::string stringPart;
@@ -50,6 +51,12 @@ namespace foundation { namespace ast {
         AtomicExpression base;
         std::vector<Postfix> postfixList;
     };
+    
+    // Unary expression
+    struct UnaryExpression {
+        std::vector<std::string> prefixes;
+        PostfixExpression base;
+    };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -62,6 +69,12 @@ BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::PostfixExpression,
                           (foundation::ast::AtomicExpression, base)
                           (std::vector<foundation::ast::Postfix>, postfixList)
+                          )
+
+BOOST_FUSION_ADAPT_STRUCT(
+                          foundation::ast::UnaryExpression,
+                          (std::vector<std::string>, prefixes)
+                          (foundation::ast::PostfixExpression, base)
                           )
 
 #pragma mark - Evaluation

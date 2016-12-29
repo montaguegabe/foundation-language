@@ -35,10 +35,10 @@ namespace foundation {
             using ascii::char_;
             
             // Most generalized definition of an expression
-            expression = postfixExpression.alias();
+            expression = unaryExpression.alias();
             
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
-            block = '{' >> postfixExpression >> '}';
+            block = '{' >> expression >> '}';
             
             // Build the definition of an expression from the most atomic level upwards
             atomicExpression %=
@@ -66,12 +66,10 @@ namespace foundation {
             char_('!')
             | char_('~')
             | char_('+')
-            | char_('-');
-            unaryExpression %=
-            token(ID_INCREMENT) >> unaryExpression
-            | token(ID_DECREMENT) >> unaryExpression
-            | unaryOperator >> unaryExpression
-            | postfixExpression;
+            | char_('-')
+            | token(ID_INCREMENT)
+            | token(ID_DECREMENT);
+            unaryExpression %= *unaryOperator >> postfixExpression;
             // TODO: sizeof? pointers?
             
             // Term, sum, shifting expressions
@@ -100,8 +98,8 @@ namespace foundation {
         qi::rule<Iterator, ast::PostfixExpressionList(), qi::in_state_skipper<Lexer> > postfixExpressionList;
         qi::rule<Iterator, ast::Postfix(), qi::in_state_skipper<Lexer> > postfix;
         qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
-        qi::rule<Iterator,  qi::in_state_skipper<Lexer> > unaryOperator;
-        qi::rule<Iterator,  qi::in_state_skipper<Lexer> > unaryExpression;
+        qi::rule<Iterator, std::string(), qi::in_state_skipper<Lexer> > unaryOperator;
+        qi::rule<Iterator, ast::UnaryExpression(), qi::in_state_skipper<Lexer> > unaryExpression;
         qi::rule<Iterator,  qi::in_state_skipper<Lexer> > multiplicativeExpression, additiveExpression,shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
         qi::rule<Iterator,  qi::in_state_skipper<Lexer> > conditionalExpression;
         qi::rule<Iterator, FOUNDATION_AST_EXPRESSION_TYPE(), qi::in_state_skipper<Lexer> > expression;
