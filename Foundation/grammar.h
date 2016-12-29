@@ -38,7 +38,7 @@ namespace foundation {
             const auto asBinOpCont = qi::as<ast::BinOpContinuation>();
             
             // Most generalized definition of an expression
-            expression = multiplicativeExpression.alias();
+            expression = logicOrExpression.alias();
             
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
             block = '{' >> expression >> '}';
@@ -77,18 +77,18 @@ namespace foundation {
             
             // Term, sum, shifting expressions
             multiplicativeExpression %= unaryExpression >> *asBinOpCont[(char_('*') | char_('/') | char_('%')) >> unaryExpression];
-            //additiveExpression %= multiplicativeExpression >> *asBinOpCont[(char_('+') | char_('-')) >> multiplicativeExpression];
-            shiftExpression %= additiveExpression >> *((token(ID_SHIFT_LEFT) | token(ID_SHIFT_RIGHT)) >> additiveExpression);
+            additiveExpression %= multiplicativeExpression >> *asBinOpCont[(char_('+') | char_('-')) >> multiplicativeExpression];
+            shiftExpression %= additiveExpression >> *asBinOpCont[(token(ID_SHIFT_LEFT) | token(ID_SHIFT_RIGHT)) >> additiveExpression];
             
             // Logical combination of expressions
-            relationalExpression %= shiftExpression >> *((token(ID_LEQ) | token(ID_GEQ) | '<' | '>') >> shiftExpression);
-            equalityExpression %= relationalExpression >> *((token(ID_EQUAL) | token(ID_NOT_EQUAL)) >> relationalExpression);
-            andExpression %= equalityExpression >> *('&' >> equalityExpression);
-            xorExpression %= andExpression >> *('^' >> andExpression);
-            orExpression %= xorExpression >> *('|' >> xorExpression);
+            relationalExpression %= shiftExpression >> *asBinOpCont[(token(ID_LEQ) | token(ID_GEQ) | '<' | '>') >> shiftExpression];
+            equalityExpression %= relationalExpression >> *asBinOpCont[(token(ID_EQUAL) | token(ID_NOT_EQUAL)) >> relationalExpression];
+            andExpression %= equalityExpression >> *asBinOpCont[char_('&') >> equalityExpression];
+            xorExpression %= andExpression >> *asBinOpCont[char_('^') >> andExpression];
+            orExpression %= xorExpression >> *asBinOpCont[char_('|') >> xorExpression];
 
-            logicAndExpression %= orExpression >> *(token(ID_AND) >> orExpression);
-            logicOrExpression %= logicAndExpression >> *(token(ID_OR) >> logicAndExpression);
+            logicAndExpression %= orExpression >> *asBinOpCont[token(ID_AND) >> orExpression];
+            logicOrExpression %= logicAndExpression >> *asBinOpCont[token(ID_OR) >> logicAndExpression];
             conditionalExpression %= logicOrExpression >> -('?' >> expression >> ':' >> conditionalExpression);
             
         }
@@ -103,10 +103,7 @@ namespace foundation {
         qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
         qi::rule<Iterator, std::string(), qi::in_state_skipper<Lexer> > unaryOperator;
         qi::rule<Iterator, ast::UnaryExpression(), qi::in_state_skipper<Lexer> > unaryExpression;
-        qi::rule<Iterator, ast::BinOp(), qi::in_state_skipper<Lexer> > multiplicativeExpression; //, additiveExpression;
-        qi::rule<Iterator,  qi::in_state_skipper<Lexer> >
-            additiveExpression,
-            shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
+        qi::rule<Iterator, ast::BinOp(), qi::in_state_skipper<Lexer> > multiplicativeExpression, additiveExpression, shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
         qi::rule<Iterator,  qi::in_state_skipper<Lexer> > conditionalExpression;
         qi::rule<Iterator, FOUNDATION_AST_EXPRESSION_TYPE(), qi::in_state_skipper<Lexer> > expression;
     };
