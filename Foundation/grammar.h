@@ -35,7 +35,7 @@ namespace foundation {
             using ascii::char_;
             
             // Most generalized definition of an expression
-            expression = unaryExpression.alias();
+            expression = multiplicativeExpression.alias();
             
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
             block = '{' >> expression >> '}';
@@ -55,7 +55,7 @@ namespace foundation {
             
             expressionList %= (expression % ',');
             postfixExpressionList %=
-            char_('(') >> expressionList >> ')'
+            char_('(') >> (expressionList | eps) >> ')'
             | char_('[') >> expressionList >> ']';
             
             postfix %= postfixSimple | postfixExpressionList;
@@ -73,7 +73,7 @@ namespace foundation {
             // TODO: sizeof? pointers?
             
             // Term, sum, shifting expressions
-            multiplicativeExpression %= unaryExpression >> *((char_('*') | char_('/') | char_('%')) >> unaryExpression);
+            multiplicativeExpression %= unaryExpression >> *(qi::as<ast::BinOpContinuation>()[(char_('*') | char_('/') | char_('%')) >> unaryExpression]);
             additiveExpression %= multiplicativeExpression >> *((char_('+') | char_('-')) >> multiplicativeExpression);
             shiftExpression %= additiveExpression >> *((token(ID_SHIFT_LEFT) | token(ID_SHIFT_RIGHT)) >> additiveExpression);
             
@@ -100,7 +100,9 @@ namespace foundation {
         qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
         qi::rule<Iterator, std::string(), qi::in_state_skipper<Lexer> > unaryOperator;
         qi::rule<Iterator, ast::UnaryExpression(), qi::in_state_skipper<Lexer> > unaryExpression;
-        qi::rule<Iterator,  qi::in_state_skipper<Lexer> > multiplicativeExpression, additiveExpression,shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
+        qi::rule<Iterator, ast::BinOp(), qi::in_state_skipper<Lexer> > multiplicativeExpression;
+        qi::rule<Iterator,  qi::in_state_skipper<Lexer> > additiveExpression,shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
+        //qi::rule<Iterator, ast::BinOpContinuation(), qi::in_state_skipper<Lexer> > multiplicativeContinue;
         qi::rule<Iterator,  qi::in_state_skipper<Lexer> > conditionalExpression;
         qi::rule<Iterator, FOUNDATION_AST_EXPRESSION_TYPE(), qi::in_state_skipper<Lexer> > expression;
     };

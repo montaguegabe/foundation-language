@@ -13,12 +13,12 @@
 #include <string>
 
 // What we parse to get at command line
-#define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::UnaryExpression
-#define FOUNDATION_AST_EXPRESSION_NAME UnaryExpression
+#define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::BinOp
+#define FOUNDATION_AST_EXPRESSION_NAME BinOp
 //foundation::ast::PostfixExpression
 
 // What we define as an expression
-#define FOUNDATION_AST_BASE_TYPE foundation::ast::UnaryExpression
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::BinOp
 
 
 #pragma mark - Type declarations
@@ -57,6 +57,20 @@ namespace foundation { namespace ast {
         std::vector<std::string> prefixes;
         PostfixExpression base;
     };
+    
+    // Continued term for a generalized binary operation.
+    struct BinOpContinuation {
+        std::string type;
+        UnaryExpression rhs;
+    };
+    
+    // Starting term for a generalized binary operation
+    struct BinOp {
+        UnaryExpression lhs;
+        std::vector<BinOpContinuation> operations;
+    };
+    
+    
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
@@ -75,6 +89,18 @@ BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::UnaryExpression,
                           (std::vector<std::string>, prefixes)
                           (foundation::ast::PostfixExpression, base)
+                          )
+
+BOOST_FUSION_ADAPT_STRUCT(
+                          foundation::ast::BinOpContinuation,
+                          (std::string, type)
+                          (foundation::ast::UnaryExpression, rhs)
+                          )
+
+BOOST_FUSION_ADAPT_STRUCT(
+                          foundation::ast::BinOp,
+                          (foundation::ast::UnaryExpression, lhs)
+                          (std::vector<foundation::ast::BinOpContinuation>, operations)
                           )
 
 #pragma mark - Evaluation
