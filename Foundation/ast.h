@@ -58,15 +58,23 @@ namespace foundation { namespace ast {
         PostfixExpression base;
     };
     
+    // Binary operations can act upon unary expressions or upon other binary operations
+    struct BinOp;
+    typedef boost::variant<
+        UnaryExpression,
+        boost::recursive_wrapper<BinOp>
+    >
+    BinOperand;
+    
     // Continued term for a generalized binary operation.
     struct BinOpContinuation {
         std::string type;
-        UnaryExpression rhs;
+        BinOperand rhs;
     };
     
     // Starting term for a generalized binary operation
     struct BinOp {
-        UnaryExpression lhs;
+        BinOperand lhs;
         std::vector<BinOpContinuation> operations;
     };
     
@@ -94,12 +102,12 @@ BOOST_FUSION_ADAPT_STRUCT(
 BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::BinOpContinuation,
                           (std::string, type)
-                          (foundation::ast::UnaryExpression, rhs)
+                          (foundation::ast::BinOperand, rhs)
                           )
 
 BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::BinOp,
-                          (foundation::ast::UnaryExpression, lhs)
+                          (foundation::ast::BinOperand, lhs)
                           (std::vector<foundation::ast::BinOpContinuation>, operations)
                           )
 
