@@ -13,6 +13,7 @@
 #include "ast.h"
 #include "tokens.h"
 
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
 #define FOUNDATION_SEM_COUT(a) (std::cout << val(a) << std::endl)
 
 namespace foundation {
@@ -22,7 +23,7 @@ namespace foundation {
     
     template <typename Iterator, typename Lexer>
     struct LanguageGrammar
-    : qi::grammar<Iterator, FOUNDATION_AST_BASE_TYPE(), qi::in_state_skipper<Lexer> >
+    : qi::grammar<Iterator, qi::in_state_skipper<Lexer> >
     {
         template <typename TokenDef>
         LanguageGrammar(TokenDef const& tok)
@@ -30,41 +31,71 @@ namespace foundation {
         {
             using qi::_val;
             using qi::lit;
+            using qi::eps;
             using boost::phoenix::ref;
             using ascii::char_;
             
+            // Most generalized definition of an expression
+            expression = conditionalExpression.alias();
+            
             // A block is simply an expression wrapped in curly braces (to signify deferred evaluation)
-            block =
-            '{'
-            >> expression
-            >> '}';
+            block = '{' >> expression >> '}';
             
             // Build the definition of an expression from the most atomic level upwards
             atomicExpression %=
             tok.identifier
             | tok.constant
             | tok.string
-            | ('(' >> expression >> ')');
+            | '(' >> expression >> ')';
             
-            // An expression with an atomic "postfix" on the end
-            postfixExpression %=
-            (atomicExpression | postfixExpression)
-            >> (token(ID_INCREMENT) | token(ID_DECREMENT));
+            // An expression with a postfix on the end
+            postfix %= '[' >> (expression % ',') >> ']'
+            | '(' >> ((expression % ',') | eps) >> ')'
+            | char_('.') >> tok.identifier
+            | token(ID_INCREMENT) | token(ID_DECREMENT);
+            postfixExpression %= atomicExpression >> *postfix;
             
-            //| (postfixExpression >> lit('(') >> ')')
-            //| (postfixExpression >> lit(.) >> tok.identifier)
+            // An expression with a unary operator
+            unaryOperator %=
+            char_('!')
+            | char_('~')
+            | char_('+')
+            | char_('-');
+            unaryExpression %=
+            token(ID_INCREMENT) >> unaryExpression
+            | token(ID_DECREMENT) >> unaryExpression
+            | unaryOperator >> unaryExpression
+            | postfixExpression;
+            // TODO: sizeof? pointers?
             
-            //postfixExpressionRec = lit('[') >> postfixExpression >> lit(']')
+            // Term, sum, shifting expressions
+            multiplicativeExpression %= unaryExpression >> *((char_('*') | char_('/') | char_('%')) >> unaryExpression);
+            additiveExpression %= multiplicativeExpression >> *((char_('+') | char_('-')) >> multiplicativeExpression);
+            shiftExpression %= additiveExpression >> *((token(ID_SHIFT_LEFT) | token(ID_SHIFT_RIGHT)) >> additiveExpression);
             
-            // Most generalized definition of an expression
-            expression = postfixExpression;
+            // Logical combination of expressions
+            relationalExpression %= shiftExpression >> *((token(ID_LEQ) | token(ID_GEQ) | '<' | '>') >> shiftExpression);
+            equalityExpression %= relationalExpression >> *((token(ID_EQUAL) | token(ID_NOT_EQUAL)) >> relationalExpression);
+            andExpression %= equalityExpression >> *('&' >> equalityExpression);
+            xorExpression %= andExpression >> *('^' >> andExpression);
+            orExpression %= xorExpression >> *('|' >> xorExpression);
+
+            logicAndExpression %= orExpression >> *(token(ID_AND) >> orExpression);
+            logicOrExpression %= logicAndExpression >> *(token(ID_OR) >> logicAndExpression);
+            conditionalExpression %= logicOrExpression >> -('?' >> expression >> ':' >> conditionalExpression);
+            
         }
         
-        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > block;
-        qi::rule<Iterator, ast::AtomicExpression(), qi::in_state_skipper<Lexer> > atomicExpression;
-        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpression;
-        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > postfixExpressionRec;
-        qi::rule<Iterator, ast::PostfixExpression(), qi::in_state_skipper<Lexer> > expression;
+        // Rule definitions
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > block;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > atomicExpression;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > postfix;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > postfixExpression;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > unaryOperator;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > unaryExpression;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > multiplicativeExpression, additiveExpression,shiftExpression, relationalExpression, equalityExpression, andExpression, xorExpression, orExpression, logicAndExpression, logicOrExpression;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > conditionalExpression;
+        qi::rule<Iterator, qi::in_state_skipper<Lexer> > expression;
     };
 }
 

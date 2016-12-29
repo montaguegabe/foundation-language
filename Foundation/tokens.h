@@ -26,6 +26,14 @@ namespace foundation {
         ID_STRING,
         ID_INCREMENT,
         ID_DECREMENT,
+        ID_SHIFT_LEFT,
+        ID_SHIFT_RIGHT,
+        ID_LEQ,
+        ID_GEQ,
+        ID_EQUAL,
+        ID_NOT_EQUAL,
+        ID_AND,
+        ID_OR,
         ID_IF,
         ID_ELSE,
         ID_WHILE
@@ -47,29 +55,62 @@ namespace foundation {
             | ')'
             | '{'
             | '}'
+            | '['
+            | ']'
+            | '='
+            | ','
+            | ';'
+            | '.'
+            
+            // Ternary
+            | '?'
+            | ':'
+            
+            // Binary
             | '-'
             | '+'
             | '*'
             | '/'
-            | '='
-            | ','
             | '^'
-            | '!'
             | '%'
-            | ';';
+            
+            // Relational/logic
+            | '>'
+            | '<'
+            | '&'
+            | '^'
+            | '|'
+
+            // Unary operators
+            | '!'
+            | '~'
+            | '+'
+            | '-';
             
             // Define tokens in order of precedence
-            
-            
             this->self.add
+            
+            // Keywords
             ("while", ID_WHILE)
             ("if", ID_IF)
             ("else", ID_ELSE)
+            
+            // Constants, identifiers, strings
             (constant, ID_CONSTANT)
             (identifier, ID_IDENTIFIER)
             (string, ID_STRING)
+            
+            // Double length symbols
             ("\\+\\+", ID_INCREMENT)
-            ("--", ID_DECREMENT);
+            ("--", ID_DECREMENT)
+            ("<<", ID_SHIFT_LEFT)
+            (">>", ID_SHIFT_RIGHT)
+            ("<=", ID_LEQ)
+            (">=", ID_GEQ)
+            ("==", ID_EQUAL)
+            ("!=", ID_NOT_EQUAL)
+            ("&&", ID_AND)
+            ("\\|\\|", ID_OR);
             
             // Define whitespace token for skipping
             this->self("WS")

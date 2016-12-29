@@ -14,8 +14,6 @@
 
 #pragma mark - Type declarations
 
-#define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
-
 namespace foundation { namespace ast {
     
     // Atomic expression
@@ -36,16 +34,22 @@ namespace foundation { namespace ast {
     >
     PostfixOrAtomicExpression;
     
+    typedef boost::variant<
+        std::string,
+        boost::recursive_wrapper<PostfixExpression>
+    >
+    Postfix; // Postfix type
+    
     struct PostfixExpression {
         PostfixOrAtomicExpression base;
-        std::string postfix;
+        Postfix postfix;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::PostfixExpression,
                           (foundation::ast::PostfixOrAtomicExpression, base)
-                          (std::string, postfix)
+                          (foundation::ast::Postfix, postfix)
                           )
 
 #pragma mark - Evaluation
@@ -78,7 +82,8 @@ namespace foundation { namespace ast {
         void operator()(PostfixExpression const & expr) const {
             std::cout << "PFE{";
             boost::apply_visitor(*this, expr.base);
-            std::cout << ", pf='" << expr.postfix;
+            std::cout << ", pf='";
+            boost::apply_visitor(*this, expr.postfix);
             std::cout << "'}";
         }
     };

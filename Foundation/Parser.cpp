@@ -33,11 +33,11 @@ bool Parser::parse(std::string & str) {
     _result = result;
     
     // Debug printing of value
-    typedef ast::printer ast_print;
+    //typedef ast::printer ast_print;
     //typedef ast::eval ast_eval;
     //ast_eval eval;
-    ast_print print;
-    print(result);
+    //ast_print print;
+    //print(result);
     //std::cout << std::endl << eval(result);
     std::cout << std::endl;
     
