@@ -12,6 +12,13 @@
 #include "boost.h"
 #include <string>
 
+// What we parse to get at command line
+#define FOUNDATION_AST_EXPRESSION_TYPE foundation::ast::PostfixExpression
+
+// What we define as an expression
+#define FOUNDATION_AST_BASE_TYPE foundation::ast::PostfixExpression
+
+
 #pragma mark - Type declarations
 
 namespace foundation { namespace ast {
@@ -26,30 +33,17 @@ namespace foundation { namespace ast {
     AtomicExpression;
     
     // Postfix expression
-    struct PostfixExpression;
-    
-    typedef boost::variant<
-        boost::recursive_wrapper<AtomicExpression>,
-        boost::recursive_wrapper<PostfixExpression>
-    >
-    PostfixOrAtomicExpression;
-    
-    typedef boost::variant<
-        std::string,
-        boost::recursive_wrapper<PostfixExpression>
-    >
-    Postfix; // Postfix type
-    
+    typedef std::string Postfix;
     struct PostfixExpression {
-        PostfixOrAtomicExpression base;
-        Postfix postfix;
+        AtomicExpression base;
+        std::vector<Postfix> postfix;
     };
 }}
 
 BOOST_FUSION_ADAPT_STRUCT(
                           foundation::ast::PostfixExpression,
-                          (foundation::ast::PostfixOrAtomicExpression, base)
-                          (foundation::ast::Postfix, postfix)
+                          (foundation::ast::AtomicExpression, base)
+                          (std::vector<foundation::ast::Postfix>, postfix)
                           )
 
 #pragma mark - Evaluation
@@ -57,7 +51,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 namespace foundation { namespace ast {
     
     // Print the AST
-    struct printer
+    /*struct printer
     {
         typedef void result_type;
         
@@ -86,7 +80,7 @@ namespace foundation { namespace ast {
             boost::apply_visitor(*this, expr.postfix);
             std::cout << "'}";
         }
-    };
+    };*/
     
     // Recursively evaluates an AST node
     /*struct eval {
